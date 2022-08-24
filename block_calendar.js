@@ -12,9 +12,10 @@ var Calendar = Application("Calendar");
 
 var computerName = app.doShellScript("/usr/sbin/scutil --get ComputerName");
 var blockedEventName = "DNB - Busy";
-var icalBuddyPath = computerName === "kvothe"
-  ? "/usr/local/bin/icalBuddy"
-  : "/opt/homebrew/bin/icalBuddy";
+var icalBuddyPath =
+  computerName === "kvothe"
+    ? "/usr/local/bin/icalBuddy"
+    : "/opt/homebrew/bin/icalBuddy";
 var daysToRead = 7;
 
 /* 
@@ -140,27 +141,30 @@ function getEventsForDateRange(calendarID, from, to) {
 }
 
 function parseEvents(rawData, excludeBlocks = true) {
-  return rawData.split("\r").map((eventString) => {
-    var [uid, startToEnd, summary] = eventString.split("|");
-    var [date, startEndTime] = startToEnd.split(" at ");
-    var [startTimeWithTZ, endTimeWithTZ] = startEndTime.split(" - ");
+  return rawData
+    .split("\r")
+    .map((eventString) => {
+      var [uid, startToEnd, summary] = eventString.split("|");
+      var [date, startEndTime] = startToEnd.split(" at ");
+      var [startTimeWithTZ, endTimeWithTZ] = startEndTime.split(" - ");
 
-    var eventStart = new Date(`${date}T${startTimeWithTZ}`);
-    var eventEnd = new Date(`${date}T${endTimeWithTZ}`);
+      var eventStart = new Date(`${date}T${startTimeWithTZ}`);
+      var eventEnd = new Date(`${date}T${endTimeWithTZ}`);
 
-    return {
-      summary,
-      uid,
-      eventStart,
-      eventEnd,
-    };
-  }).filter(({ summary }) => {
-    if (excludeBlocks === true) {
-      return summary !== blockedEventName;
-    } else {
-      return true;
-    }
-  });
+      return {
+        summary,
+        uid,
+        eventStart,
+        eventEnd,
+      };
+    })
+    .filter(({ summary }) => {
+      if (excludeBlocks === true) {
+        return summary !== blockedEventName;
+      } else {
+        return true;
+      }
+    });
 }
 
 function hasExistingEvent(calendarID, start, end, comparator) {
@@ -261,7 +265,7 @@ function checkOrphanedEvents() {
         e.eventEnd,
         (element) => element.summary !== blockedEventName
       );
-      console.log('existing event?', JSON.stringify(e, null, 2), existingEvent)
+      console.log("existing event?", JSON.stringify(e, null, 2), existingEvent);
       if (!existingEvent) {
         var localUID = sqlQuery(writeID, e.uid);
         var cal = Calendar.calendars.byId(writeID);
