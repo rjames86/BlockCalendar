@@ -24,3 +24,8 @@ These are the variables you can update
     - How many days out you want the script to look.
 - `icalBuddyPath`
     - see installation instructions
+
+
+# Running Script
+
+    osascript block_calendar.js
