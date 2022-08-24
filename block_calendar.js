@@ -248,7 +248,6 @@ function addCalendarBlocks() {
 
 function checkOrphanedEvents() {
   // We now check for any orphaned events. Maybe an event got cancelled and we need to open that time slot back up.
-  var allWriteIDs = getWriteIDs();
   var allReadIDs = calendarDatas
     .map((c) => c.readID)
     .filter((id) => id !== null);
